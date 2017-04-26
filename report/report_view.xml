@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="report_sale_order_new"
+            string="Quotation / Order"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="allplastics.report_saleorder_new" 
+            name="allplastics.report_saleorder_new" 
+           
+        />
+
+        <report 
+            string="Job Sheet" 
+            id="action_report_job_sheet" 
+            model="mrp.production" 
+            name="allplastics.report_job_sheet"
+            file="allplastics.report_job_sheet" 
+            report_type="qweb-pdf"
+            paperformat="allplastics.paperformat_all_plastics"
+        />
+
+        <report 
+            string="Invoices" 
+            id="action_report_account_invoice" 
+            model="account.invoice" 
+            name="allplastics.report_invoice"
+            file="allplastics.report_invoice" 
+            report_type="qweb-pdf"
+            paperformat="allplastics.paperformat_all_plastics"
+        />
+
+    </data>
+</odoo>

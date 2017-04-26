@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_company_allplastics" model="ir.ui.view">
+             <field name="name">res.company.allplastics</field>
+             <field name="model">res.company</field>
+             <field name="inherit_id" ref="base.view_company_form"/>
+             <field name="arch" type="xml">
+              <xpath expr="//notebook/page" position="inside">
+                <group>
+                <field name="term_one"/>
+                <field name="term_two"/>
+            </group>
+             </xpath>
+         </field>
+     </record>
+
+    	<record id="sale_order_form_view_allplastics" model="ir.ui.view">
+             <field name="name">sale.order.allplastics</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+             <field name="arch" type="xml">
+              <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <field name="production_id" invisible="1"/>
+                    <button type="object"
+                        name="action_view_mo"
+                        class="oe_stat_button"
+                        icon="fa-list-alt"
+                        attrs="{'invisible': [('production_id', '=', False)]}" string="Manufacturing">
+                    </button>
+
+                </xpath>
+                <field name="payment_term_id" position="replace"/>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_id']" position="after">
+                    <field name="drawing"/>
+                    <!-- <field name="drawing_attach" invisible="1"/> -->
+                </xpath>
+                <xpath expr="//field[@name='order_line']//form//field[@name='product_id']" position="after">
+                    <field name="drawing"/>
+                    <!-- <field name="drawing_attach"/> -->
+                </xpath>
+                <xpath expr="//page" position="after">
+                    <page string="Standard Terms and Condition">
+                        <group>
+                        <group>
+                          <label for="quote_valid"/>
+                          <div class="o_row">
+                            <field name="quote_valid" style="width: 100px;!important;"/> <span><b>  In  Days </b></span>
+                          </div>
+                            <field name="payment_term_id"/>
+                        </group>
+                        <group>
+                          <label for="lead_time"/>
+                          <div class="o_row">
+                            <field name="lead_time" style="width: 100px;!important;"/> <span><b> In Days </b></span>
+                          </div>
+                            <field name="freight"/>
+                        </group>
+                        <field name="term_one"/>
+                        <field name="term_two"/>
+                    </group>
+
+                    </page>
+                </xpath>
+                </field>
+        </record>
+
+</data>
+</odoo>

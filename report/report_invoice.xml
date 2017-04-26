@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_invoice">
+        <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                         <div class="col-xs-12">
+                                        <strong><center><h2>
+                                        <span t-field="o.company_id.partner_id.name" />
+                                         </h2></center></strong>
+                         </div>
+                    </div>
+                    <div class="container">
+                    <div class="row">
+                        <div class="col-xs-6">
+                           <span t-field="o.company_id.partner_id.street" />
+                    <span></span>
+                    <span t-field="o.company_id.partner_id.street2" />
+                    <br />
+                    <span t-field="o.company_id.partner_id.city" />
+                    <span></span>
+                    <span t-field="o.company_id.partner_id.state_id.name" />
+                    <span></span>
+                    <span t-field="o.company_id.partner_id.zip" />
+                    <br />
+                    <span>T:</span>
+                    <span t-field="o.company_id.partner_id.phone" />
+                    <span></span>
+                    <span>F: </span>
+                    <span t-field="o.company_id.partner_id.fax" />
+                    <br />
+                    <span>E:</span>
+                    <span t-field="o.company_id.partner_id.email" />
+                    <span></span>
+                    <span t-esc="o.company_id.partner_id.website[7:]" />
+                    <br />
+                    <span>ABN: </span>
+                    <span t-field="o.company_id.partner_id.vat" />
+                        </div>
+
+                        <div class="col-xs-6">
+                            <strong>Tax Invoice</strong>
+                            <span t-field="o.number"/>
+                            <br/>
+
+                        </div>
+                    </div></div>
+
+
+
+                    <div class="row">
+                         <div class="col-xs-6">
+                            <strong><span>Bill To</span></strong>
+                           <div t-field="o.partner_id"
+                           t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        </div>
+                         <div class="col-xs-6">
+                          <strong><span>Ship To</span></strong>
+                          <div t-field="o.partner_id"
+                           t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        </div>
+                    </div>
+          <br/>
+                    <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Salesperson</th>
+                        <th>Your No</th>
+                        <th>Ship Via</th>
+                        <th >Ship Date</th>
+                        <th >Terms</th>
+                         <th >Date</th>
+                         <th>Pg</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span t-field="o.user_id.name"/></td>
+                       
+                       
+                        <td>
+                            <span t-field="o.partner_id.mobile"/>
+                        </td>
+                        <td  >
+                            <span t-field="o.ship_via"/>
+                        </td>
+                        <td >
+                            <span t-field="o.ship_date"/>
+                        </td>
+                        <td >
+                            <span t-field="o.payment_term_id.name"/>
+                        </td>
+                        <td >
+                            <span t-field="o.date_invoice"/>
+                        </td>
+                         <td >
+                            <span>1</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:6%;">QTY</th>
+                        <th class="text-center" style="width:40%;">Description</th>
+                        <th class="text-center" style="width:15%;">Price</th>
+                        <th class="text-center" style="width:9%;">Unit</th>
+                        <th  class="text-center" style="width:9%;">Disc</th>
+                        <th class="text-center" style="width:15%;">Extended</th>
+                        <th class="text-center" style="width:6%;">Code</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <tr t-foreach="o.invoice_line_ids" t-as="l">
+                        <td><span t-field="l.quantity"/></td>
+                        <td ><span t-field="l.name"/></td>
+                        <td >
+                            <span t-field="l.currency_id.symbol"/>
+                            <span t-field="l.price_unit"/>
+                        </td>
+                        <td >
+                            <span>Each</span>
+                        </td>
+                        <td >
+                            <span t-field="l.discount"/>
+                        </td>
+                        <td >
+                            <span t-field="l.price_subtotal" 
+                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                        </td>
+                        <td >
+                            <span>GST</span>
+                        </td>
+                    </tr>
+                        <tr>
+                            <th colspan="4"></th>
+                            <th colspan="2">Subtotal</th>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                        <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                        <tr>
+                      <th colspan="4"></th>
+                        <th>Tax</th>
+                      <td><span t-esc="amount_by_group[0] if len(o.tax_line_ids) > 1 else (o.tax_line_ids.tax_id.description or o.tax_line_ids.tax_id.name)"/></td>
+                                <td class="text-right">
+                                    <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                     </tr>
+                     </t>
+                     <tr>
+                      <th colspan="4"></th>
+                      <th colspan="2">Total</th>
+                      <td class="text-right">
+                                 <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                     </tr>
+                </tbody>
+            </table>
+           
+                   
+                   
+                    <div class="oe_structure"/>
+                </div>
+        </t>
+</template>
+</odoo>
